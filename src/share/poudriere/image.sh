@@ -2,7 +2,8 @@
 #
 # Copyright (c) 2015 Baptiste Daroussin <bapt@FreeBSD.org>
 # All rights reserved.
-# Copyright (c) 2020 Allan Jude <allanjude@FreeBSD.org>
+# Copyright (c) 2018-2021 Allan Jude <allanjude@FreeBSD.org>
+# Copyright (c) 2019 Marie Helene Kvello-Aune <freebsd@mhka.no>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -50,12 +51,13 @@ Parameters:
     -o outputdir    -- Image destination directory
     -p portstree    -- Ports tree
     -P pkgbase      -- List of pkgbase packages to install
+    -R flags        -- ZFS Replication Flags
     -s size         -- Set the image size
     -S snapshotname -- Snapshot name
     -t type         -- Type of image can be one of (default iso+zmfs):
                     -- iso, iso+mfs, iso+zmfs, usb, usb+mfs, usb+zmfs,
                        rawdisk, zrawdisk, tar, firmware, rawfirmware,
-                       dump, zsnapshot
+                       dump, zfssend[+be[+full]], zsnapshot
     -w size         -- Set the size of the swap partition
     -X excludefile  -- File containing the list in cpdup format
     -z set          -- Set
@@ -260,6 +262,7 @@ install_world()
 . ${SCRIPTPREFIX}/image_rawdisk.sh
 . ${SCRIPTPREFIX}/image_tar.sh
 . ${SCRIPTPREFIX}/image_usb.sh
+. ${SCRIPTPREFIX}/image_zfssend.sh
 . ${SCRIPTPREFIX}/image_zsnapshot.sh
 
 HOSTNAME=poudriere-image
@@ -269,7 +272,7 @@ PKG_QUIET="-q"
 : ${PRE_BUILD_SCRIPT:=""}
 : ${POST_BUILD_SCRIPT:=""}
 
-while getopts "A:bB:c:f:h:i:j:m:n:o:p:P:s:S:t:vw:X:z:" FLAG; do
+while getopts "A:bB:c:f:h:i:j:m:n:o:p:P:R:s:S:t:vw:X:z:" FLAG; do
 	case "${FLAG}" in
 		A)
 			[ -f "${OPTARG}" ] || err 1 "No such post-build-script: ${OPTARG}"
@@ -335,6 +338,9 @@ while getopts "A:bB:c:f:h:i:j:m:n:o:p:P:s:S:t:vw:X:z:" FLAG; do
 			PKGBASELIST=${OPTARG}
 			INSTALLWORLD=install_world_from_pkgbase
 			;;
+		R)
+			ZFS_SEND_FLAGS="-${OPTARG}"
+			;;
 		s)
 			IMAGESIZE="${OPTARG}"
 			;;
@@ -346,7 +352,7 @@ while getopts "A:bB:c:f:h:i:j:m:n:o:p:P:s:S:t:vw:X:z:" FLAG; do
 			case ${MEDIATYPE} in
 			iso|iso+mfs|iso+zmfs|usb|usb+mfs|usb+zmfs) ;;
 			rawdisk|zrawdisk|tar|firmware|rawfirmware) ;;
-			dump|zsnapshot) ;;
+			dump|zfssend|zfssend+*|zsnapshot) ;;
 			*) err 1 "invalid mediatype: ${MEDIATYPE}"
 			esac
 			;;
@@ -379,6 +385,9 @@ post_getopts
 : ${SWAPBEFORE:=0}
 : ${SWAPSIZE:=0}
 : ${PTNAME:=default}
+: ${ZFS_SEND_FLAGS:=-Rec}
+: ${ZFS_BEROOT_NAME:=ROOT}
+: ${ZFS_BOOTFS_NAME:=default}
 
 [ -n "${JAILNAME}" ] || usage
 
@@ -513,7 +522,7 @@ cap_mkdb ${WRKDIR}/world/etc/login.conf
 
 # Set hostname
 if [ -n "${HOSTNAME}" ]; then
-	echo "hostname=${HOSTNAME}" >> ${WRKDIR}/world/etc/rc.conf
+	sysrc -q -R "${WRKDIR}/world" hostname="${HOSTNAME}"
 fi
 
 msg "Installing packages"
