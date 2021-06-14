@@ -391,7 +391,7 @@ post_getopts
 
 [ -n "${JAILNAME}" ] || usage
 
-: ${OUTPUTDIR:=${POUDRIERE_DATA}/images/}
+: ${OUTPUTDIR:=${POUDRIERE_DATA}/images}
 : ${IMAGENAME:=poudriereimage}
 MASTERNAME=${JAILNAME}-${PTNAME}${SETNAME:+-${SETNAME}}
 
