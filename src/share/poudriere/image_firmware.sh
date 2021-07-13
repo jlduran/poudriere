@@ -109,8 +109,16 @@ firmware_build()
 	FTMPDIR=`mktemp -d -t poudriere-firmware` || exit 1
 	# Set proper permissions to this empty directory: /cfg (so /etc) and /data once mounted will inherit them
 	chmod -R 755 ${FTMPDIR}
-	makefs -B little -s ${CFG_SIZE} ${WRKDIR}/cfg.img ${FTMPDIR}
-	makefs -B little -s ${DATA_SIZE} ${WRKDIR}/data.img ${FTMPDIR}
+	CFGDIR="${FTMPDIR}"
+	DATADIR="${FTMPDIR}"
+	if [ -d "${SAVED_PWD}/cfg" ]; then
+		CFGDIR="${SAVED_PWD}/cfg"
+	fi
+	if [ -d "${SAVED_PWD}/data" ]; then
+		DATADIR="${SAVED_PWD}/data"
+	fi
+	makefs -B little -s ${CFG_SIZE} ${WRKDIR}/cfg.img ${CFGDIR}
+	makefs -B little -s ${DATA_SIZE} ${WRKDIR}/data.img ${DATADIR}
 	rm -rf ${FTMPDIR}
 	makefs -B little -s ${OS_SIZE}m -o label=${IMAGENAME} \
 		-o version=2 ${WRKDIR}/raw.img ${WRKDIR}/world
