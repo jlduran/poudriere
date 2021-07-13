@@ -424,6 +424,7 @@ mkdir -p ${WRKDIR}/out
 WORLDDIR="${WRKDIR}/world"
 [ -z "${EXCLUDELIST}" ] || cat ${EXCLUDELIST} > ${excludelist}
 cat >> ${excludelist} << EOF
+.poudriere-snap-clean
 usr/src
 var/db/freebsd-update
 var/db/etcupdate
