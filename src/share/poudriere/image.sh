@@ -525,7 +525,7 @@ cap_mkdb ${WRKDIR}/world/etc/login.conf
 
 # Set hostname
 if [ -n "${HOSTNAME}" ]; then
-	sysrc -q -R "${WRKDIR}/world" hostname="${HOSTNAME}"
+	sysrc -q -f "${WRKDIR}/world/etc/rc.conf" hostname="${HOSTNAME}"
 fi
 
 msg "Installing packages"
