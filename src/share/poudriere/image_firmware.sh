@@ -135,12 +135,12 @@ firmware_generate()
 	make_esp_file ${espfilename} ${ESP_SIZE} ${WRKDIR}/world/boot/gptboot.efi
 	# Some platform (ie: aarch64) doesn't have MBR bootloader
 	if [ -f ${mnt}/boot/pmbr ]; then
-		pmbr="-b ${mnt}/boot/pmbr"
+		pmbr=""
 	else
 		pmbr=""
 	fi
 	if [ -f ${mnt}/boot/gptboot ]; then
-		gptboot="-p freebsd-boot:=${mnt}/boot/gptboot"
+		gptboot=""
 	else
 		gptboot=""
 	fi
