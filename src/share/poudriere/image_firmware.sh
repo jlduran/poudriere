@@ -130,9 +130,8 @@ firmware_generate()
 	fi
 	espfilename=$(mktemp /tmp/efiboot.XXXXXX)
 	make_esp_file ${espfilename} ${ESP_SIZE} ${WRKDIR}/world/boot/loader.efi
-	mkimg -s gpt -C ${IMAGESIZE} -b ${mnt}/boot/pmbr \
+	mkimg -s gpt -C ${IMAGESIZE} \
 		-p efi:=${espfilename} \
-		-p freebsd-boot:=${mnt}/boot/gptboot \
 		-p freebsd-ufs/${IMAGENAME}1:=${WRKDIR}/raw.img \
 		-p freebsd-ufs/${IMAGENAME}2:=${WRKDIR}/raw.img \
 		-p freebsd-ufs/cfg:=${WRKDIR}/cfg.img \
