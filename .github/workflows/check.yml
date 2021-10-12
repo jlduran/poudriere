@@ -1,0 +1,40 @@
+name: Cross-build Check
+
+on: [ push, pull_request ]
+
+jobs:
+  check:
+    name: TODO Matrix-based name
+    runs-on: ubuntu-latest # TODO add macOS as well
+    env:
+      EXTRA_BUILD_ARGS: --cross-bindir=/usr/lib/llvm-12/bin
+      MAKEOBJDIRPREFIX: build
+
+    steps:
+      - name: Clone poudriere
+        uses: actions/checkout@v2
+
+      - name: Clone FreeBSD
+        uses: actions/checkout@v2
+        with:
+          repository: freebsd/freebsd-src
+          path: freebsd-src
+
+      - name: Install additional packages
+        run: |
+          sudo apt-get update --quiet || true
+          sudo apt-get -yq --no-install-suggests --no-install-recommends install bmake libarchive-dev
+
+      - name: Create $MAKEOBJDIRPREFIX
+        run: mkdir -p $MAKEOBJDIRPREFIX
+
+      - name: Bootstrap bmake
+        run: |
+          ./freebsd-src/tools/build/make.py $EXTRA_BUILD_ARGS TARGET=amd64 TARGET_ARCH=amd64 -n
+          sudo cp $MAKEOBJDIRPREFIX/cross-build/include/linux/* /usr/lib
+
+      - name: Configure
+        run: ./configure --enable-debug=yes || { cat config.log; exit 1; }
+
+      - name: Check
+        run: make check
