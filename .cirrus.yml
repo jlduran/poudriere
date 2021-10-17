@@ -1,55 +1,28 @@
-check_task:
-        env:
-                CIRRUS_CLONE_DEPTH: 1
-                MAKEJOBS: "-j4"
-                PARALLEL_JOBS: "3"
-                DISTFILES_CACHE: "/tmp/distfiles"
-                CCACHE_DIR: "/tmp/.ccache"
-                CCACHE_COMPRESS: 1
-                CCACHE_SIZE: "200M"
-                CCACHE_STATIC_PREFIX: "/usr/local"
-                CCACHE_NOSTATS: 1
-                CCACHE_TEMPDIR: "/tmp"
-                BASEFS: ${CIRRUS_WORKING_DIR}/test_bulk
-        ccache_cache:
-                folder: ${CCACHE_DIR}
-        distfiles_cache:
-                folder: ${DISTFILES_CACHE}
-                populate_script: mkdir -p ${DISTFILES_CACHE}
-        pkg_bootstrap_script:
-                - env ASSUME_ALWAYS_YES=yes pkg bootstrap -f
-                - env IGNORE_OSVERSION=yes pkg update -f
-        ccache_setup_script:
-                - env IGNORE_OSVERSION=yes pkg install -y ccache-static
-                - ccache --max-size=${CCACHE_SIZE}
-        # Build with asserts/debugging for checks. distcheck won't use asserts.
-        compile_script:
-                - ./configure --enable-debug=yes || { cat config.log; exit 1; }
-                - make ${MAKEJOBS}
-        test_jail_prep_script:
-                - make -C test prep
-        matrix:
-                - name: "Check"
-                  env:
-                          SH: "sh"
-                - name: "Check (/bin/sh)"
-                  env:
-                          SH: "/bin/sh"
-        check_script: make -s ${MAKEJOBS} check SH=${SH} VERBOSE=1 || { cat test/test-suite.log; exit 1; }
-        distcheck_script: make -s ${MAKEJOBS} distcheck SH=${SH} VERBOSE=1 || { find . -name test-suite.log -exec cat {} +; exit 1; }
-        always:
-                bulk_logs_cleanup_script:
-                        - ( find -x test_bulk/data/logs/bulk ! -name '*.log' ! -name '.poudriere.*' ! -name '*.json' -delete; ) || true
-                test_logs_artifacts:
-                        paths:
-                                - "test/*.log"
-                                - "test_bulk/data/logs/bulk/**"
-                        type: text/plain
-        freebsd_instance:
-                cpu: 8
-                memory: 8G
-                matrix:
-                        - image: freebsd-12-2-release-amd64
-                        - image: freebsd-13-0-release-amd64
-                        - image_family: freebsd-14-0-snap
-# vim: sw=8 et:
+poudriere_task:
+  freebsd_instance:
+    image_family: freebsd-14-0-snap
+    cpu: 8
+    memory: 8G
+    nested_virtualization: true
+
+  environment:
+    CIRRUS_CLONE_DEPTH: 1
+
+  install_script:
+    - pkg install -y git poudriere-devel
+
+  jail_script:
+    - poudriere jail -c -j router -v 13.0-RELEASE -K GENERIC
+
+  ports_script:
+    - poudriere ports -c -p ports
+
+  build_script:
+    - echo 'security/strongswan' > router-pkglist
+    - poudriere bulk -j router -p ports -f router-pkglist
+
+  image_script:
+    - poudriere image -t firmware -j router -s 4g -p ports -h router -n router -f router-pkglist
+
+  test_script:
+    - sh /usr/share/examples/bhyve/vmrun.sh -u -t tap0 -t tap1 -d /usr/local/poudriere/data/images/router.img router
