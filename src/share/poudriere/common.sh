@@ -866,13 +866,6 @@ _lookup_portdir() {
 	local _port="$2"
 	local o _ptdir
 
-	for o in ${OVERLAYS}; do
-		_ptdir="${OVERLAYSDIR}/${o}/${_port}"
-		if [ -r "${MASTERMNTREL}${_ptdir}/Makefile" ]; then
-			setvar "${_varname}" "${_ptdir}"
-			return
-		fi
-	done
 	_ptdir="${PORTSDIR:?}/${_port}"
 	setvar "${_varname}" "${_ptdir}"
 	return
@@ -2161,6 +2154,7 @@ mount_ports() {
 		_pget odir "${o}" mnt || err 1 "Missing mnt metadata for overlay ${o}"
 		msg "Mounting ports overlay from: ${odir}"
 		${NULLMOUNT} "$@" "${odir}" "${mnt}${OVERLAYSDIR}/${o}"
+		mount -t unionfs -o noatime "${mnt}${OVERLAYSDIR}/${o}" "${mnt}${PORTSDIR}"
 	done
 }
 
@@ -7167,11 +7161,6 @@ test_port_origin_exist() {
 	local _origin="$1"
 	local o
 
-	for o in ${OVERLAYS}; do
-		if [ -d "${MASTERMNTREL}${OVERLAYSDIR:?}/${o}/${_origin}" ]; then
-			return 0
-		fi
-	done
 	if [ -d "${MASTERMNTREL}/${PORTSDIR:?}/${_origin}" ]; then
 		return 0
 	fi
@@ -7335,10 +7324,6 @@ _listed_ports() {
 		fi
 		{
 			_list_ports_dir "${portsdir}" "${PTNAME:?}"
-			for o in ${OVERLAYS}; do
-				_pget portsdir "${o}" mnt
-				_list_ports_dir "${portsdir}" "${o}"
-			done
 		} | {
 			# Sort but only if there's OVERLAYS to avoid
 			# needless slowdown for pipelining otherwise.
@@ -7561,10 +7546,6 @@ load_moved() {
 
 	{
 		echo "${MASTERMNT}${PORTSDIR}/MOVED"
-		for o in ${OVERLAYS}; do
-			test -f "${MASTERMNT}${OVERLAYSDIR}/${o}/MOVED" || continue
-			echo "${MASTERMNT}${OVERLAYSDIR}/${o}/MOVED"
-		done
 	} | \
 	xargs cat | \
 	awk -f ${AWKPREFIX}/parse_MOVED.awk | \
