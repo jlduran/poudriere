@@ -1,7 +1,5 @@
-# $FreeBSD: head/misc/freebsd-release-manifests/Makefile 429892 2016-12-29 12:41:04Z mat $
-
 PORTNAME=	freebsd-release-manifests
-DISTVERSION=	20161010
+DISTVERSION=	20231010
 PORTREVISION=	0
 FLAVORS=	DEFAULT FOO BAR
 FLAVOR?=	DEFAULT

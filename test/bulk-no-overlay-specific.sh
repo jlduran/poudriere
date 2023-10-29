@@ -9,7 +9,7 @@ assert 0 $? "Bulk should pass"
 ret=0
 hash_get originspec-pkgname "misc/foo" pkgname || ret=$?
 assert 0 "${ret}" "Cannot find pkgname for misc/foo"
-assert "foo-20161010" "${pkgname}" "misc/foo found the overlay version maybe?"
+assert "foo-20231026" "${pkgname}" "misc/foo found the overlay version maybe?"
 
 EXPECTED_QUEUED="misc/foo ports-mgmt/pkg"
 EXPECTED_LISTED="misc/foo"

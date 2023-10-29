@@ -9,7 +9,7 @@ assert 0 $? "Bulk should pass"
 ret=0
 hash_get originspec-pkgname "misc/foo" pkgname || ret=$?
 assert 0 "${ret}" "Cannot find pkgname for misc/foo"
-assert "foo-OVERLAY-20161010" "${pkgname}" "misc/foo didn't find the overlay version"
+assert "foo-OVERLAY-20231026" "${pkgname}" "misc/foo didn't find the overlay version"
 
 EXPECTED_IGNORED="misc/foo-FLAVORS-unsorted@IGNORED misc/foo-FLAVORS-unsorted@DEPIGNORED misc/foo-dep-FLAVORS-unsorted@DEPIGNORED misc/foo-dep-FLAVORS-unsorted@IGNORED misc/foo@IGNORED_OVERLAY ports-mgmt/poudriere-devel-IGNORED ports-mgmt/poudriere-devel-IGNORED-and-skipped misc/foop-IGNORED misc/foo-all-IGNORED@DEFAULT misc/foo-all-IGNORED@FLAV misc/foo-default-IGNORED@DEFAULT misc/foo-all-DEPIGNORED@FLAV"
 EXPECTED_SKIPPED="ports-mgmt/poudriere-devel-dep-IGNORED ports-mgmt/poudriere-devel-dep2-IGNORED misc/foo-all-DEPIGNORED@DEFAULT misc/foo-default-DEPIGNORED@DEFAULT"
