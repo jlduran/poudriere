@@ -82,7 +82,11 @@ zfs_prepare()
 		zfs create -o mountpoint=/ ${zroot}/${ZFS_BEROOT_NAME}/${ZFS_BOOTFS_NAME}
 		zfs create -o mountpoint=/tmp -o exec=on -o setuid=off ${zroot}/tmp
 		zfs create -o mountpoint=/usr -o canmount=off ${zroot}/usr
-		zfs create ${zroot}/usr/home
+		if [ ${JAIL_OSVERSION} -lt 1400000 ]; then
+			zfs create ${zroot}/usr/home
+		else
+			zfs create -o mountpoint=/home ${zroot}/home
+		fi
 		zfs create -o setuid=off ${zroot}/usr/ports
 		zfs create ${zroot}/usr/src
 		zfs create ${zroot}/usr/obj

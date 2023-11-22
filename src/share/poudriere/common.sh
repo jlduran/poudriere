@@ -2285,12 +2285,18 @@ do_portbuild_mounts() {
 		    "${mnt}/packages" \
 		    "${mnt}/.npkg" \
 		    "${mnt}/var/db/ports" \
-		    "${mnt}${HOME}/.ccache" \
-		    "${mnt}/usr/home"
+		    "${mnt}${HOME}/.ccache"
+		if [ ${JAIL_OSVERSION} -lt 1400000 ]; then
+			mkdir -p "${mnt}/usr/home"
+		else
+			mkdir -p "${mnt}/home"
+		fi
 		for o in ${OVERLAYS}; do
 			mkdir -p "${mnt}${OVERLAYSDIR}/${o}"
 		done
-		ln -fs "usr/home" "${mnt}/home"
+		if [ ${JAIL_OSVERSION} -lt 1400000 ]; then
+			ln -fs "usr/home" "${mnt}/home"
+		fi
 		MASTER_DATADIR="${MNT_DATADIR}"
 		add_relpath_var MASTER_DATADIR
 	fi
@@ -3243,10 +3249,14 @@ jail_start() {
 		chflags noschg \
 		    "${tomnt}${LOCALBASE:-/usr/local}" \
 		    "${tomnt}${PREFIX:-/usr/local}" \
-		    "${tomnt}/usr/home" \
 		    "${tomnt}/boot/modules" \
 		    "${tomnt}/boot/firmware" \
 		    "${tomnt}/boot"
+		if [ ${JAIL_OSVERSION} -lt 1400000 ]; then
+			chflags noschg "${tomnt}/usr/home"
+		else
+			chflags noschg "${tomnt}/home"
+		fi
 		if [ -n "${CCACHE_STATIC_PREFIX}" ] && \
 			[ -x "${CCACHE_STATIC_PREFIX}/bin/ccache" ]; then
 			# Need to allow ccache-update-links to work.
