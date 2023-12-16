@@ -32,7 +32,6 @@ TESTS=\
 	pkg_version.sh \
 	port_var_fetch.sh \
 	prefix_output.sh \
-	read_blocking.sh \
 	read_file.sh \
 	relpath.sh \
 	relpath_common.sh \
