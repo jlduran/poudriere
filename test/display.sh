@@ -70,16 +70,16 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output "Name 1" "Release" > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name 1 Release
-	blah   8.2-RELEASE-p1
-	blah   9.3-RELEASE-p1
-	blah   9.3-RELEASE-p10
-	blah   10.0-RELEASE
-	blah 1 10.2-RELEASE
-	blah   10.2-RELEASE-p1
-	blah2  10.2-RELEASE-p1
-	blah   10.2-RELEASE-p10
-	blah   11.2-RELEASE-p1
+	Name 1    Release
+	-- blah   8.2-RELEASE-p1
+	-- blah   9.3-RELEASE-p1
+	-- blah   9.3-RELEASE-p10
+	-- blah   10.0-RELEASE
+	-- blah 1 10.2-RELEASE
+	-- blah   10.2-RELEASE-p1
+	-- blah2  10.2-RELEASE-p1
+	-- blah   10.2-RELEASE-p10
+	-- blah   11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -103,16 +103,16 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name   Release
-	blah   8.2-RELEASE-p1
-	blah   9.3-RELEASE-p1
-	blah   9.3-RELEASE-p10
-	blah   10.0-RELEASE
-	blah   10.2-RELEASE
-	blah   10.2-RELEASE-p1
-	blah2  10.2-RELEASE-p1
-	blah   10.2-RELEASE-p10
-	blah   11.2-RELEASE-p1
+	Name      Release
+	-- blah   8.2-RELEASE-p1
+	-- blah   9.3-RELEASE-p1
+	-- blah   9.3-RELEASE-p10
+	-- blah   10.0-RELEASE
+	-- blah   10.2-RELEASE
+	-- blah   10.2-RELEASE-p1
+	-- blah2  10.2-RELEASE-p1
+	-- blah   10.2-RELEASE-p10
+	-- blah   11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 	DISPLAY_USE_COLUMN="${old}"
@@ -137,16 +137,16 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output "Name" "Release" > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name   Release
-	blah   8.2-RELEASE-p1
-	blah   9.3-RELEASE-p1
-	blah   9.3-RELEASE-p10
-	blah   10.0-RELEASE
-	blah   10.2-RELEASE
-	blah   10.2-RELEASE-p1
-	blah2  10.2-RELEASE-p1
-	blah   10.2-RELEASE-p10
-	blah   11.2-RELEASE-p1
+	Name      Release
+	-- blah   8.2-RELEASE-p1
+	-- blah   9.3-RELEASE-p1
+	-- blah   9.3-RELEASE-p10
+	-- blah   10.0-RELEASE
+	-- blah   10.2-RELEASE
+	-- blah   10.2-RELEASE-p1
+	-- blah2  10.2-RELEASE-p1
+	-- blah   10.2-RELEASE-p10
+	-- blah   11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 	DISPLAY_USE_COLUMN="${old}"
@@ -171,16 +171,16 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name  Release         
-	blah  8.2-RELEASE-p1  
-	blah  9.3-RELEASE-p1  
-	blah  9.3-RELEASE-p10 
-	blah  10.0-RELEASE    
-	blah  10.2-RELEASE    
-	blah  10.2-RELEASE-p1 
-	blah2 10.2-RELEASE-p1 
-	blah  10.2-RELEASE-p10
-	blah  11.2-RELEASE-p1 
+	Name     Release         
+	-- blah  8.2-RELEASE-p1  
+	-- blah  9.3-RELEASE-p1  
+	-- blah  9.3-RELEASE-p10 
+	-- blah  10.0-RELEASE    
+	-- blah  10.2-RELEASE    
+	-- blah  10.2-RELEASE-p1 
+	-- blah2 10.2-RELEASE-p1 
+	-- blah  10.2-RELEASE-p10
+	-- blah  11.2-RELEASE-p1 
 	EOF
 	assert_file "${expected}" "${outfile}"
 	DISPLAY_TRIM_TRAILING_FIELD="${old}"
@@ -203,15 +203,15 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output -q > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	blah  8.2-RELEASE-p1
-	blah  9.3-RELEASE-p1
-	blah  9.3-RELEASE-p10
-	blah  10.0-RELEASE
-	blah  10.2-RELEASE
-	blah  10.2-RELEASE-p1
-	blah2 10.2-RELEASE-p1
-	blah  10.2-RELEASE-p10
-	blah  11.2-RELEASE-p1
+	-- blah  8.2-RELEASE-p1
+	-- blah  9.3-RELEASE-p1
+	-- blah  9.3-RELEASE-p10
+	-- blah  10.0-RELEASE
+	-- blah  10.2-RELEASE
+	-- blah  10.2-RELEASE-p1
+	-- blah2 10.2-RELEASE-p1
+	-- blah  10.2-RELEASE-p10
+	-- blah  11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -236,19 +236,19 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name  Release
-	blah3 
-	blah4 
-	blah  8.2-RELEASE-p1
-	blah  9.3-RELEASE-p1
-	blah  9.3-RELEASE-p10
-	blah  10.0-RELEASE
-	blah  10.2-RELEASE
-	blah  10.2-RELEASE-p1
-	blah2 10.2-RELEASE-p1
-	blah  10.2-RELEASE-p10
-	      11-RELEASE
-	blah  11.2-RELEASE-p1
+	Name     Release
+	-- blah3 
+	-- blah4 
+	-- blah  8.2-RELEASE-p1
+	-- blah  9.3-RELEASE-p1
+	-- blah  9.3-RELEASE-p10
+	-- blah  10.0-RELEASE
+	-- blah  10.2-RELEASE
+	-- blah  10.2-RELEASE-p1
+	-- blah2 10.2-RELEASE-p1
+	-- blah  10.2-RELEASE-p10
+	--       11-RELEASE
+	-- blah  11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -270,15 +270,15 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
 	Name
-	blah
-	blah
-	blah
-	blah
-	blah
-	blah
-	blah2
-	blah
-	blah
+	-- blah
+	-- blah
+	-- blah
+	-- blah
+	-- blah
+	-- blah
+	-- blah2
+	-- blah
+	-- blah
 	EOF
 	assert_file "${expected}" "${outfile}" "Filtered column"
 }
@@ -323,10 +323,10 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name Memory
-	blah      5
-	foo      10
-	       15 G
+	Name    Memory
+	-- blah      5
+	-- foo      10
+	          15 G
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -342,10 +342,10 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output "Name" "Memory" > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name Memory
-	blah      5
-	foo      10
-	       15 G
+	Name    Memory
+	-- blah      5
+	-- foo      10
+	          15 G
 	EOF
 	assert_file "${expected}" "${outfile}" "dynamic with footer"
 }
@@ -360,10 +360,10 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name Memory
-	blah 5
-	foo  10
-	     15 G
+	Name    Memory
+	-- blah 5
+	-- foo  10
+	        15 G
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -378,10 +378,10 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name 1  Mem    Blah
-	blah    5      0
-	foo bar 10     0
-	        15 GiB 0
+	Name 1     Mem    Blah
+	-- blah    5      0
+	-- foo bar 10     0
+	           15 GiB 0
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -395,7 +395,7 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
 	Name Release
-	     11.2-RELEASE-p1
+	--   11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -416,16 +416,16 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name Release
-	blah 8.2-RELEASE-p1
-	blah 9.3-RELEASE-p1
-	blah 9.3-RELEASE-p10
-	blah 10.0-RELEASE
-	blah 10.2-RELEASE
-	blah 10.2-RELEASE-p1
-	blah2 10.2-RELEASE-p1
-	blah 10.2-RELEASE-p10
-	blah 11.2-RELEASE-p1
+	Name    Release
+	-- blah 8.2-RELEASE-p1
+	-- blah 9.3-RELEASE-p1
+	-- blah 9.3-RELEASE-p10
+	-- blah 10.0-RELEASE
+	-- blah 10.2-RELEASE
+	-- blah 10.2-RELEASE-p1
+	-- blah2 10.2-RELEASE-p1
+	-- blah 10.2-RELEASE-p10
+	-- blah 11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
@@ -447,16 +447,16 @@ alias assert_file='_assert_file "$0:$LINENO"'
 	display_output > "${outfile}"
 	expected=$(mktemp -t expected)
 	cat > "${expected}" <<-EOF
-	Name  Release
-	blah  8.2-RELEASE-p1
-	blah  9.3-RELEASE-p1
-	blah  9.3-RELEASE-p10
-	blah  10.0-RELEASE
-	blah  10.2-RELEASE
-	blah  10.2-RELEASE-p1
-	blah2 10.2-RELEASE-p1
-	blah  10.2-RELEASE-p10
-	blah  11.2-RELEASE-p1
+	Name     Release
+	-- blah  8.2-RELEASE-p1
+	-- blah  9.3-RELEASE-p1
+	-- blah  9.3-RELEASE-p10
+	-- blah  10.0-RELEASE
+	-- blah  10.2-RELEASE
+	-- blah  10.2-RELEASE-p1
+	-- blah2 10.2-RELEASE-p1
+	-- blah  10.2-RELEASE-p10
+	-- blah  11.2-RELEASE-p1
 	EOF
 	assert_file "${expected}" "${outfile}"
 }
