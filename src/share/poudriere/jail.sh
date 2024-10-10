@@ -372,6 +372,9 @@ update_jail() {
 	pkgbase)
 		VERSION=$(jget ${JAILNAME} version | cut -d '.' -f 1)
 		[ -z "${ARCH}" ] && ARCH=$(jget ${JAILNAME} arch)
+		# XXX JL START -- just use uname -p in get_host_arch()
+		ARCH=${ARCH#*.}
+		# XXX JL END
 		pkg -o IGNORE_OSVERSION=yes -o ABI="FreeBSD:${VERSION}:${ARCH}" -o REPOS_DIR="${JAILMNT}/etc/pkg" -r "${JAILMNT}" update || \
 			err 1 "pkg update failed"
 		pkg -o IGNORE_OSVERSION=yes -o ABI="FreeBSD:${VERSION}:${ARCH}" -o REPOS_DIR="${JAILMNT}/etc/pkg"  -r "${JAILMNT}" upgrade -y || \
