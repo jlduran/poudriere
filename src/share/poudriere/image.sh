@@ -31,6 +31,7 @@
 . ${SCRIPTPREFIX}/image_hybridiso.sh
 . ${SCRIPTPREFIX}/image_iso.sh
 . ${SCRIPTPREFIX}/image_mfs.sh
+. ${SCRIPTPREFIX}/image_oci.sh
 . ${SCRIPTPREFIX}/image_rawdisk.sh
 . ${SCRIPTPREFIX}/image_tar.sh
 . ${SCRIPTPREFIX}/image_usb.sh
@@ -46,7 +47,7 @@ Parameters:
     -j jail         -- Jail
     -t type         -- Type of image can be one of
                     -- hybridiso, iso, iso+mfs, iso+zmfs, usb, usb+mfs, usb+zmfs,
-                       rawdisk, zrawdisk, tar, firmware, rawfirmware,
+                       oci, rawdisk, zrawdisk, tar, firmware, rawfirmware,
                        dump, zfs+[raw|gpt|send[+full[+be]]], zsnapshot
 
 Options:
@@ -358,6 +359,7 @@ while getopts "A:bB:c:f:h:i:j:m:n:o:p:P:R:s:S:t:vw:X:z:" FLAG; do
 			MEDIATYPE=${OPTARG}
 			case ${MEDIATYPE} in
 			hybridiso|iso|iso+mfs|iso+zmfs|usb|usb+mfs|usb+zmfs) ;;
+			oci) ;;
 			rawdisk|zrawdisk|tar|firmware|rawfirmware) ;;
 			dump|zsnapshot) ;;
 			zfs|zfs+gpt|zfs+raw) ;;
